@@ -1,7 +1,7 @@
 const pool = require('../services/db.js');
 const fs = require('fs');
 
-const initTablesSQL = fs.readFileSync('./initTables.sql', 'utf-8');
+const initTablesSQL = fs.readFileSync('./src/config/initTables.sql', 'utf-8');
 
 pool.query(initTablesSQL, (error, results) => {
     if (error) {
