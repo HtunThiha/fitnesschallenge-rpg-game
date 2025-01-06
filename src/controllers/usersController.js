@@ -106,6 +106,10 @@ module.exports.readInboxMessagesByUserId = (req, res, next) => {
                 record.received_on = dateFormatter.formatDate(record.received_on);
             });
 
+            if (results.length == 0) {
+                results = "No messages in the inbox yet.";
+            }
+
             res.status(200).json({messages: results});
         }
     }
