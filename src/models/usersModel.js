@@ -10,15 +10,14 @@ module.exports.selectAllUsers = (callback) => {
     pool.query(SQLSTATEMENT, callback);
 }
 
-module.exports.selectUsernameByUserId = (data, callback) => {
+module.exports.selectUsernameByUserId = (data, callback, queryParameter) => {
 
     const SQLSTATEMENT = `
         SELECT username FROM users
-        WHERE user_id = ?
-        OR username = ?;
+        WHERE ${queryParameter} = ?;
     `;
 
-    const VALUES = [data.user_id, data.username];
+    const VALUES = [data[queryParameter]];
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }

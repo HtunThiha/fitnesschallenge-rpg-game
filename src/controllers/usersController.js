@@ -36,7 +36,7 @@ module.exports.checkUserExistsByUserId = (req, res, next) => {
     if (data.user_id == undefined) {
         res.status(400).json({message: "User_id not provided."});
     } else {
-        usersModel.selectUsernameByUserId(data, callback);
+        usersModel.selectUsernameByUserId(data, callback, "user_id");
     }
 }
 
@@ -139,7 +139,7 @@ module.exports.checkUsernameAlreadyExists = (req, res, next) => {
     if (data.username == undefined) {
         res.status(400).json({message: "Username not provided."});
     } else {
-        usersModel.selectUsernameByUserId(data, callback);
+        usersModel.selectUsernameByUserId(data, callback, "username");
     }
 }
 
