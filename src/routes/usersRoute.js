@@ -18,4 +18,10 @@ router.get('/:user_id/details',
     usersController.readUserByUserId
 );
 
+router.get('/:user_id/inbox', 
+    usersController.checkUserExistsByUserId,
+    usersController.validatePasswordByUserId,
+    usersController.readInboxMessagesByUserId
+);
+
 module.exports = router;

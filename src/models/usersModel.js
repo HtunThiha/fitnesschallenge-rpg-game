@@ -53,3 +53,16 @@ module.exports.selectPasswordByUserId = (data, callback) => {
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }
+
+module.exports.selectInboxMessagesByUserId = (data, callback) => {
+
+    const SQLSTATEMENT = `
+        SELECT title, description, received_on FROM user_inbox
+        WHERE user_id = ?
+        ORDER BY received_on DESC;
+    `;
+
+    const VALUES = [data.user_id];
+
+    pool.query(SQLSTATEMENT, VALUES, callback);
+}

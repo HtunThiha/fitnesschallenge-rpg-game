@@ -1,4 +1,5 @@
 const usersModel = require('../models/usersModel.js');
+const dateFormatter = require('./dateFormatter.js');
 
 module.exports.readAllUsers = (req, res, next) => {
 
@@ -7,7 +8,7 @@ module.exports.readAllUsers = (req, res, next) => {
             console.error("Error reading all users: \n", error);
             res.status(500).json({message: "Internal server error."});
         } else {
-            res.status(200).send(results);
+            res.status(200).json(results);
         }
     }
 
@@ -78,7 +79,7 @@ module.exports.readUserByUserId = (req, res, next) => {
                 console.error("Error reading user by user_id: \n", error);
                 res.status(500).json({message: "Internal server error."});
             } else {
-                res.status(200).send(results);
+                res.status(200).json(results);
             }
         }
 
@@ -87,4 +88,27 @@ module.exports.readUserByUserId = (req, res, next) => {
         } else {
             usersModel.selectUserByUserId(data, "public", callback);
         }
+}
+
+module.exports.readInboxMessagesByUserId = (req, res, next) => {
+
+    const data = {
+        user_id: req.params.user_id
+    }
+
+    const callback = (error, results, fields) => {
+        if (error) {
+            console.error("Error reading inbox messages by user_id: \n", error);
+            res.status(500).json({message: "Internal server error."});
+        } else {
+            results.map(record => {
+                record.description = (record.description == null) ? "":record.description;
+                record.received_on = dateFormatter.formatDate(record.received_on);
+            });
+
+            res.status(200).json({messages: results});
+        }
+    }
+
+    usersModel.selectInboxMessagesByUserId(data, callback);
 }
