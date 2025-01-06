@@ -7,4 +7,15 @@ router.get('/',
     usersController.readAllUsers
 );
 
+router.get('/:user_id',
+    usersController.checkUserExistsByUserId,
+    usersController.readUserByUserId
+);
+
+router.get('/:user_id/details', 
+    usersController.checkUserExistsByUserId,
+    usersController.validatePasswordByUserId,
+    usersController.readUserByUserId
+);
+
 module.exports = router;
