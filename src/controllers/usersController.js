@@ -185,7 +185,7 @@ module.exports.updateUsernameByUserId = (req, res, next) => {
         } else {
             res.status(200).json({
                 message: "Username updated successfully.",
-                updated_user: results[1][0]
+                updated_user: results[2][0]
             });
         }
     }

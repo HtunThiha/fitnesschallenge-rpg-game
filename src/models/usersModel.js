@@ -85,15 +85,31 @@ module.exports.insertSingleUser = (data, callback) => {
 module.exports.updateUsernameByUserId = (data, callback) => {
 
     const SQLSTATEMENT = `
+
+        SET @formerUsername = (
+            SELECT username FROM users
+            WHERE user_id = ?
+        );
+
         UPDATE users
         SET username = ?
         WHERE user_id = ?;
 
         SELECT user_id, username AS new_username, level FROM users
         WHERE user_id = ?;
+
+        SET @newUsername = (
+            SELECT username FROM users
+            WHERE user_id = ?
+        );
+
+        SET @description = CONCAT("Username has changed from ", @formerUsername, " to ", @newUsername, ".");
+
+        INSERT INTO user_inbox(user_id, title, description)
+        VALUES (?, "Username updated successfully.", @description);
     `;
 
-    const VALUES = [data.username, data.user_id, data.user_id];
+    const VALUES = [data.user_id, data.username, data.user_id, data.user_id, data.user_id, data.user_id];
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }
