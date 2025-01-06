@@ -24,4 +24,9 @@ router.get('/:user_id/inbox',
     usersController.readInboxMessagesByUserId
 );
 
+router.post('/', 
+    usersController.checkUsernameAlreadyExists,
+    usersController.createNewUser
+);
+
 module.exports = router;

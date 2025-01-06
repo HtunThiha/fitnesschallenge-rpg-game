@@ -14,10 +14,11 @@ module.exports.selectUsernameByUserId = (data, callback) => {
 
     const SQLSTATEMENT = `
         SELECT username FROM users
-        WHERE user_id = ?;
+        WHERE user_id = ?
+        OR username = ?;
     `;
 
-    const VALUES = [data.user_id];
+    const VALUES = [data.user_id, data.username];
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }
@@ -63,6 +64,21 @@ module.exports.selectInboxMessagesByUserId = (data, callback) => {
     `;
 
     const VALUES = [data.user_id];
+
+    pool.query(SQLSTATEMENT, VALUES, callback);
+}
+
+module.exports.insertSingleUser = (data, callback) => {
+
+    const SQLSTATEMENT = `
+        INSERT INTO users(username, password)
+        VALUES(?, ?);
+
+        SELECT user_id, username, level FROM users
+        WHERE user_id = LAST_INSERT_ID();
+    `;
+
+    const VALUES = [data.username, data.password];
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }

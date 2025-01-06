@@ -116,3 +116,57 @@ module.exports.readInboxMessagesByUserId = (req, res, next) => {
 
     usersModel.selectInboxMessagesByUserId(data, callback);
 }
+
+module.exports.checkUsernameAlreadyExists = (req, res, next) => {
+
+    const data = {
+        username: req.body.username
+    }
+
+    const callback = (error, results, fields) => {
+        if (error) {
+            console.error("Error checking username presence in database: \n", error);
+            res.status(500).json({message: "Internal server error."});
+        } else {
+            if (results.length !== 0) {
+                res.status(409).json({message: `Username ${data.username} already exists.`});
+            } else {
+                next();
+            }
+        }
+    }
+
+    if (data.username == undefined) {
+        res.status(400).json({message: "Username not provided."});
+    } else {
+        usersModel.selectUsernameByUserId(data, callback);
+    }
+}
+
+module.exports.createNewUser = (req, res, next) => {
+
+    const data = {
+        username: req.body.username,
+        password: req.body.password
+    }
+
+    const callback = (error, results, fields) => {
+        if (error) {
+            console.error("Error creating new user: \n", error);
+            res.status(500).json({message: "Internal server error."});
+        } else {
+            res.status(201).json({
+                message: "User created successfully.",
+                new_user: results[1][0]
+            });
+        }
+    }
+
+    if (data.username == undefined) {
+        res.status(400).json({message: "Username not provided."});
+    } else if (data.password == undefined) {
+        res.status(400).json({message: "Password not provided."});
+    } else {
+        usersModel.insertSingleUser(data, callback);
+    }
+}
