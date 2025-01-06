@@ -170,3 +170,25 @@ module.exports.createNewUser = (req, res, next) => {
         usersModel.insertSingleUser(data, callback);
     }
 }
+
+module.exports.updateUsernameByUserId = (req, res, next) => {
+
+    const data = {
+        user_id: req.body.user_id,
+        username: req.body.username,
+    }
+
+    const callback = (error, results, fields) => {
+        if (error) {
+            console.error("Error updating user by user_id: \n", error);
+            res.status(500).json({message: "Internal server error."});
+        } else {
+            res.status(200).json({
+                message: "Username updated successfully.",
+                updated_user: results[1][0]
+            });
+        }
+    }
+
+    usersModel.updateUsernameByUserId(data, callback);
+}

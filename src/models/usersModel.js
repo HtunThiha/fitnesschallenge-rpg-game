@@ -81,3 +81,19 @@ module.exports.insertSingleUser = (data, callback) => {
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }
+
+module.exports.updateUsernameByUserId = (data, callback) => {
+
+    const SQLSTATEMENT = `
+        UPDATE users
+        SET username = ?
+        WHERE user_id = ?;
+
+        SELECT user_id, username AS new_username, level FROM users
+        WHERE user_id = ?;
+    `;
+
+    const VALUES = [data.username, data.user_id, data.user_id];
+
+    pool.query(SQLSTATEMENT, VALUES, callback);
+}

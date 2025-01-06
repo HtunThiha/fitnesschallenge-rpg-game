@@ -29,4 +29,11 @@ router.post('/',
     usersController.createNewUser
 );
 
+router.put('/', 
+    usersController.checkUserExistsByUserId,
+    usersController.checkUsernameAlreadyExists,
+    usersController.validatePasswordByUserId,
+    usersController.updateUsernameByUserId
+);
+
 module.exports = router;
