@@ -3,6 +3,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS user_challenge_frequency;
+DROP TABLE IF EXISTS user_inbox;
 
 CREATE TABLE users(
     user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -33,6 +34,15 @@ CREATE TABLE user_challenge_frequency(
     PRIMARY KEY(user_id, challenge_id),
     FOREIGN KEY(user_id) REFERENCES users(user_id),
     FOREIGN KEY(challenge_id) REFERENCES challenges(challenge_id)
+);
+
+CREATE TABLE user_inbox(
+    message_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    received_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
 INSERT INTO users(username, password)
