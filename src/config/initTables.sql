@@ -51,6 +51,7 @@ CREATE TABLE user_inbox(
     user_id INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
+    status ENUM("read", "unread") DEFAULT "unread",
     received_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );

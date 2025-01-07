@@ -59,10 +59,20 @@ module.exports.selectInboxMessagesByUserId = (data, callback) => {
     const SQLSTATEMENT = `
         SELECT title, description, received_on FROM user_inbox
         WHERE user_id = ?
+        AND status = "unread"
         ORDER BY received_on DESC;
+
+        SELECT title, description, received_on FROM user_inbox
+        WHERE user_id = ?
+        AND status = "read"
+        ORDER BY received_on DESC;
+
+        UPDATE user_inbox
+        SET status = "read"
+        WHERE status = "unread";
     `;
 
-    const VALUES = [data.user_id];
+    const VALUES = [data.user_id, data.user_id];
 
     pool.query(SQLSTATEMENT, VALUES, callback);
 }

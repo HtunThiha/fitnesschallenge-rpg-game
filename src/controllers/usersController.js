@@ -101,16 +101,21 @@ module.exports.readInboxMessagesByUserId = (req, res, next) => {
             console.error("Error reading inbox messages by user_id: \n", error);
             res.status(500).json({message: "Internal server error."});
         } else {
-            results.map(record => {
-                record.description = (record.description == null) ? "":record.description;
-                record.received_on = dateFormatter.formatDate(record.received_on);
-            });
 
+            for(let i = 0; i <= 1; i++) {
+                results[i].map(record => {
+                    record.description = (record.description == null) ? "":record.description;
+                    record.received_on = dateFormatter.formatDate(record.received_on);
+                });
+            }
             if (results.length == 0) {
                 results = "No messages in the inbox yet.";
             }
 
-            res.status(200).json({messages: results});
+            res.status(200).json({
+                new_messages: (results[0].length == 0) ? "No new messages received":results[0],
+                read_messages: results[1]
+            });
         }
     }
 
