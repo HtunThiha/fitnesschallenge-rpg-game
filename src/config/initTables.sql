@@ -3,7 +3,6 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS challenges;
 DROP TABLE IF EXISTS user_challenge_completions;
-DROP TABLE IF EXISTS user_challenge_frequency;
 DROP TABLE IF EXISTS user_inbox;
 
 CREATE TABLE users(
@@ -36,16 +35,6 @@ CREATE TABLE user_challenge_completions(
     FOREIGN KEY(challenge_id) REFERENCES challenges(challenge_id)
 );
 
-CREATE TABLE user_challenge_frequency(
-    user_id INT NOT NULL,
-    challenge_id INT NOT NULL,
-    frequency INT DEFAULT 0,
-    last_played_on TIMESTAMP,
-    PRIMARY KEY(user_id, challenge_id),
-    FOREIGN KEY(user_id) REFERENCES users(user_id),
-    FOREIGN KEY(challenge_id) REFERENCES challenges(challenge_id)
-);
-
 CREATE TABLE user_inbox(
     message_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -68,19 +57,6 @@ VALUES
     (1, "Cycle around the island for at least 50km", 100, 1),
     (1, "Complete a full marathon (42.2km)", 200, 1),
     (1, "Hold a plank for 5 minutes", 50, 1),
-    (1, "Perform 100 push-ups in one session", 75, 1);
-
-INSERT INTO user_challenge_frequency(user_id, challenge_id)
-VALUES
-    (2, 1),
-    (2, 2),
-    (2, 3),
-    (2, 4),
-    (2, 5),
-    (3, 1),
-    (3, 2),
-    (3, 3),
-    (3, 4),
-    (3, 5);
+    (1, "Perform 100 push-ups in one session", 70, 1);
 
 SET FOREIGN_KEY_CHECKS = 1;
