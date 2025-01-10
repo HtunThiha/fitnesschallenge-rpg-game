@@ -7,12 +7,14 @@ DROP TABLE IF EXISTS user_inbox;
 
 CREATE TABLE users(
     user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(255),
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    role ENUM("admin", "user") DEFAULT "user",
     skillpoints INT DEFAULT 0,
     gold INT DEFAULT 0,
     diamond INT DEFAULT 0,
     level INT DEFAULT 1,
-    password VARCHAR(255),
+    password TEXT NOT NULL,
     created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -45,11 +47,10 @@ CREATE TABLE user_inbox(
     FOREIGN KEY(user_id) REFERENCES users(user_id)
 );
 
-INSERT INTO users(username, password)
+INSERT INTO users(username, email, password)
 VALUES
-    ("ADMIN", "QHMgFUjCR6689@#^%"),
-    ("Steve", "Helloworld2277"),
-    ("Sally", "LifeisSpice09");
+    ("Steve", "Steve@gmail.com", "Helloworld2277"),
+    ("Sally", "Sally@gmail.com", "LifeisSpice09");
 
 INSERT INTO challenges(creator_id, challenge, skillpoints, is_active)
 VALUES
