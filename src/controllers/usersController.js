@@ -1,5 +1,6 @@
 const usersModel = require('../models/usersModel.js');
 const dateFormatter = require('./dateFormatter.js');
+const bcrypt = require('bcrypt');
 
 module.exports.readAllUsers = (req, res, next) => {
 
@@ -52,12 +53,22 @@ module.exports.validatePasswordByUserId = (req, res, next) => {
             console.error("Error validating password by user_id: \n", error);
             res.status(500).json({message: "Internal server error."});
         } else {
-            if (results[0].password != data.password) {
-                res.status(403).json({message: "Incorrect password."});
-            } else {
-                req.body.password_validation = true;
-                next();
-            }
+            let hashedPassword = results[0].password
+            let inputPassword = req.body.password
+
+            bcrypt.compare(inputPassword, hashedPassword, (error, isMatch) => {
+                if (error) {
+                    console.error("Error validating password: \n", error);
+                    res.status(500).json({message: "Internal server error."});
+                } else {
+                    if (isMatch) {
+                        req.body.password_validation = true;
+                        next();
+                    } else {
+                        res.status(401).json({message: "Incorrect password."});
+                    }
+                }
+            });
         }
     }
 
@@ -172,7 +183,14 @@ module.exports.createNewUser = (req, res, next) => {
     } else if (data.password == undefined) {
         res.status(400).json({message: "Password not provided."});
     } else {
-        usersModel.insertSingleUser(data, callback);
+        bcrypt.hash(data.password, parseInt(process.env.SALT_ROUNDS), (error, hash) => {
+            if (error) {
+                console.error("Error hashing password for creating user:\n", error);
+            } else {
+                data.password = hash;
+                usersModel.insertSingleUser(data, callback);
+            }
+        });
     }
 }
 
